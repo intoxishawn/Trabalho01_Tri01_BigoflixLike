@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <title>TrabalhoProg</title>
+</head>
+<body>
+    <form onsubmit="Alert()" action="../controller/Usuario.php?acao=cadastrar" method="POST">
+        <div class="form-group">
+            <label for="nome">Nome</label>
+            <input type="text" class="form-control" name="nome" placeholder="Nome Exemplo" maxlength="50" required="required">
+        </div>
+        <div class="form-group">
+            <label for="celular">Celular</label>
+            <input type="text" class="form-control" name="celular" placeholder="99999999" pattern="\d*" maxlength="11" required="required">
+        </div>
+        <div class="form-group">
+            <label for="email">Email</label>
+            <input type="email" class="form-control" name="email" placeholder="Nome@email.com" maxlength="50" required="required">
+        </div>
+        <div class="form-group">
+            <label for="senha">Senha</label>
+            <input type="password" class="form-control" name="senha" placeholder="***********" maxlength="30" required="required">
+        </div>
+        <div class="form-group form-check">
+            <input type="checkbox" class="form-check-input" name="papeis[]" value="1">
+            <label class="form-check-label" for="Usuario">Usuario</label>
+            <input type="checkbox" class="form-check-input" name="papeis[]" value="2">
+            <label class="form-check-label" for="Administrador">Administrador</label>
+        </div>
+        <button type="submit" id="btnSubmit" class="btn btn-primary">Cadastrar</button>
+        <button type="button" class="btn btn-warning" onclick="troca()">Ver já registrados</button>
+    </form>
+    <script>
+        document.getElementById('btnSubmit').addEventListener('click', function(event) {
+            var checkboxes = document.querySelectorAll('input[name="papeis[]"]');
+            var selecionado = false;
+    
+            for (var i = 0; i < checkboxes.length; i++) {
+                if (checkboxes[i].checked) {
+                    selecionado = true;
+                    break;
+                }
+            }
+            if (!selecionado) {
+                event.preventDefault();
+                alert('Selecione pelo menos um papel.');
+            } else {
+                alert("Cadastro realizado com sucesso!");
+            }
+        });
+        function troca() {
+            window.location.href = "Cadastros.php";
+        }
+    </script>
+</body>
+</html>
