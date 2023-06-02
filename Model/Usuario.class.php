@@ -86,25 +86,6 @@ class Usuario{
         }
     }
 
-    public function update()
-    {
-        $pdo = conexao();
-        try{
-            $stmt = $pdo->prepare('UPDATE usuario SET nome = :nome, email = :email, senha = :senha, celular = :celular WHERE id = :id');
-            $stmt->execute([
-                ':nome' => $this->nome,
-                ':email' => $this->email,
-                ':senha' => $this->senha,
-                ':celular' => $this->celular,
-                ':id' => $this->id
-            ]);
-            return true;
-        }catch(Exception $e){
-            //Log 
-            return false;
-        }
-    }
-
     public static function deletar($id){
         $pdo = conexao();
         
@@ -128,14 +109,20 @@ class Usuario{
         return $usuarios;
     }
 
-    public function getPapeisUsuario($id) {
+    public static function update1($id) {
         $pdo = conexao();
-        $stmt = $pdo->prepare('SELECT fk_papel FROM papel_usuario WHERE fk_usuario = :id');
+        $stmt = $pdo->prepare('DELETE FROM papel_usuario WHERE fk_usuario = :id');
         $stmt->execute([
             ':id' => $id
         ]);
-        $papeis = $stmt->fetchAll(PDO::FETCH_COLUMN);
-        return $papeis;
     }
 
+    public static function update2($idu, $idp) {
+        $pdo = conexao();
+        $stmt = $pdo->prepare('INSERT INTO papel_usuario (fk_usuario, fk_papel) VALUES (:idu, :idp)');
+        $stmt->execute([
+            ':idu' => $idu,
+            ':idp' => $idp
+        ]);
+    }
 }

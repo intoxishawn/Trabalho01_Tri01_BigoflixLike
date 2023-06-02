@@ -72,8 +72,9 @@ $usuarios = Usuario::getAll();
 <br><br>
 <div id="form-edicao-papeis" style="display: none;">
     <h3>Editar Papéis do Usuário</h3>
+    <p>Selecione os papeis que o usuario deve ter</p>
     <form method="POST" action="../controller/Usuario.php?acao=atualizar">
-        <input type="hidden" name="id" id="usuario-id">
+        <input type="hidden" name="usuario-id" id="usuario-id">
         <div class="form-check">
             <input type="checkbox" class="form-check-input" name="papeis[]" value="1">
             <label class="form-check-label">Usuario</label>
@@ -82,12 +83,34 @@ $usuarios = Usuario::getAll();
             <input type="checkbox" class="form-check-input" name="papeis[]" value="2">
             <label class="form-check-label">Administrador</label>
         </div>
-    <button type="submit" class="btn btn-primary">Salvar</button>
+    <button type="submit" id="saveEdit" class="btn btn-primary">Salvar</button>
     </form>
 </div>
 <br><br>
 <div><button type="button" class="btn btn-warning" onclick="troca()">Cadastrar mais pessoas</button></div>
 <script>
+    document.getElementById('saveEdit').addEventListener('click', function(event) {
+        var checkboxes = document.querySelectorAll('input[name="papeis[]"]');
+        var selecionado = false;
+    
+        for (var i = 0; i < checkboxes.length; i++) {
+            if (checkboxes[i].checked) {
+                selecionado = true;
+                break;
+            }
+        }
+        if (!selecionado) {
+            event.preventDefault();
+            alert('Selecione pelo menos um papel.');
+        } else {
+            var usuarioId = document.getElementById('usuario-id').value;
+            var form = document.getElementById('form-edicao-papeis');
+            var action = form.getAttribute('action');
+            form.setAttribute('action', action + '&id=' + usuarioId);
+            alert("Papeis editados!");
+        }
+    });
+
     var btnExcluirUsuarios = document.querySelectorAll('.btn-excluir-usuario');
     btnExcluirUsuarios.forEach(function(btn) {
         btn.addEventListener('click', function() {
@@ -101,37 +124,19 @@ $usuarios = Usuario::getAll();
         window.location.href = "Index.html";
     }
     function handleEditarUsuario(event) {
-        var usuarioId = event.target.dataset.id;
-        var checkboxUsuario = document.querySelector('input[name="papeis[]"][value="1"]');
-        var checkboxAdministrador = document.querySelector('input[name="papeis[]"][value="2"]');
-        var formEdicaoPapeis = document.getElementById('form-edicao-papeis');
-
-        checkboxUsuario.checked = false;
-        checkboxAdministrador.checked = false;
-
-        var papeisUsuario = Usuario.getPapeisUsuario(usuarioId);
-        marcarCheckboxesPapeis(papeisUsuario);
-
+        document.getElementById('form-edicao-papeis').style.display = 'block';
         document.getElementById('usuario-id').value = usuarioId;
-        formEdicaoPapeis.style.display = 'block';
     }
 
-var botoesEditar = document.querySelectorAll('.btn-editar-usuario');
-botoesEditar.forEach(function (botao) {
-  botao.addEventListener('click', handleEditarUsuario);
-});
+    var botoesEditar = document.querySelectorAll('.btn-editar-usuario');
+        botoesEditar.forEach(function(botao) {
+            botao.addEventListener('click', function() {
+                var usuarioId = this.getAttribute('data-id');
+                document.getElementById('usuario-id').value = usuarioId;
+                document.getElementById('form-edicao-papeis').style.display = 'block';
+        });
+    });
 
-var botoesEditar = document.querySelectorAll('.btn-editar-usuario');
-botoesEditar.forEach(function (botao) {
-    botao.addEventListener('click', handleEditarUsuario);
-});
-function marcarCheckboxesPapeis(papeisUsuario) {
-  var checkboxUsuario = document.querySelector('input[name="papeis[]"][value="1"]');
-  var checkboxAdministrador = document.querySelector('input[name="papeis[]"][value="2"]');
-  
-  checkboxUsuario.checked = papeisUsuario.includes("1");
-  checkboxAdministrador.checked = papeisUsuario.includes("2");
-}
 </script>
 </body>
 </html>
